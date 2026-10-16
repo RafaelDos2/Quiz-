@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elo V // Desafio de Proteção Digital</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+
+    body {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+
+    .quiz-container {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      max-width: 650px;
+      width: 100%;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 10;
+    }
+
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 15px;
+    }
+
+
+    .header h1 {
+      color: #58a6ff;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+
+
+    .header p {
+      color: #8b949e;
+      font-size: 0.95rem;
+      margin-top: 5px;
+    }
+
+
+    .question {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #f0f6fc;
+      margin-bottom: 20px;
+    }
+
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+
+    .btn-option {
+      background-color: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      padding: 14px 18px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+
+    .btn-option:hover:not([disabled]) {
+      background-color: #30363d;
+      border-color: #58a6ff;
+      color: #ffffff;
+    }
+
+
+    .btn-option.correct {
+      background-color: #2ea043 !important;
+      border-color: #3fb950 !important;
+      color: #ffffff;
+    }
+
+
+    .btn-option.wrong {
+      background-color: #da3633 !important;
+      border-color: #f85149 !important;
+      color: #ffffff;
+    }
+
+
+    .footer {
+      margin-top: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+
+    .progress {
+      color: #8b949e;
+      font-size: 0.9rem;
+    }
+
+
+    .btn-next {
+      background-color: #238636;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+    }
+
+
+    .btn-next:hover {
+      background-color: #2ea043;
+    }
+
+
+    .result-screen {
+      text-align: center;
+      display: none;
+    }
+
+
+    .result-screen h2 {
+      font-size: 1.8rem;
+      color: #58a6ff;
+      margin-bottom: 10px;
+    }
+
+
+    .result-screen p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: #c9d1d9;
+    }
+
+
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #21262d;
+      border: 1px solid #58a6ff;
+      border-radius: 20px;
+      color: #58a6ff;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
+
+
+    .btn-restart {
+      background-color: #1f6feb;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+
+    .btn-restart:hover {
+      background-color: #388bfd;
+    }
+
+
+    .particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      animation: floatEffect 0.8s ease-out forwards;
+    }
+
+
+    @keyframes floatEffect {
+      0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(0deg);
+      }
+      30% {
+        opacity: 1;
+        transform: scale(1.1) rotate(20deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.6) rotate(90deg);
+      }
+    }
+
+
+    .wrong-banner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+      font-weight: 900;
+      color: #f85149;
+      text-shadow: 0 0 20px rgba(248, 81, 73, 0.8);
+      z-index: 1000;
+      pointer-events: none;
+      animation: bannerPop 0.9s ease-out forwards;
+    }
+
+
+    @keyframes bannerPop {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3);
+      }
+      25% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+      75% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+  <div class="quiz-container">
+    <div id="quiz-screen">
+      <div class="header">
+        <h1>🛡️ Elo V</h1>
+        <p>Testes de Segurança Digital Teen</p>
+      </div>
+
+
+      <div class="question" id="question-text">Carregando pergunta...</div>
+
+
+      <div class="options" id="options-container"></div>
+
+
+      <div class="footer">
+        <span class="progress" id="progress-text">Pergunta 1 de 6</span>
+        <button class="btn-next" id="btn-next" onclick="nextQuestion()">Próxima ➔</button>
+      </div>
+    </div>
+
+
+    <div class="result-screen" id="result-screen">
+      <h2>Missão Concluída!</h2>
+      <p id="score-text">Você acertou 0 de 6 perguntas.</p>
+      <div class="badge" id="badge-text">Nível: Desconhecido</div>
+      <br>
+      <button class="btn-restart" onclick="restartQuiz()">Jogar Novamente</button>
+    </div>
+  </div>
+
+
+  <script>
+    const originalQuestions = [
+      {
+        question: "Um perfil desconhecido no Instagram/TikTok te envia um link dizendo que você ganhou um iPhone. O que você faz?",
+        options: [
+          { text: "Clico no link na hora para resgatar!", correct: false },
+          { text: "Desconfio, não clico e bloqueio/denuncio o perfil.", correct: true },
+          { text: "Envio o link para todos os meus amigos.", correct: false }
+        ]
+      },
+      {
+        question: "Qual é a melhor estratégia para criar uma senha segura?",
+        options: [
+          { text: "Usar '123456' ou sua data de nascimento.", correct: false },
+          { text: "Usar a mesma senha para todos os jogos e redes sociais.", correct: false },
+          { text: "Criar uma frase longa misturando letras, números e símbolos.", correct: true }
+        ]
+      },
+      {
+        question: "O que é a Autenticação de Dois Fatores (2FA)?",
+        options: [
+          { text: "Uma camada extra de segurança que pede um código além da senha.", correct: true },
+          { text: "Um tipo de vírus que infecta o computador.", correct: false },
+          { text: "Um aplicativo para editar fotos em dupla.", correct: false }
+        ]
+      },
+      {
+        question: "Alguém no jogo online pede sua senha para 'ajudar a subir de nível' ou te dar um item raro. O que fazer?",
+        options: [
+          { text: "Passar a senha, afinal é só para ajudar.", correct: false },
+          { text: "Nunca passar sua senha para ninguém, mesmo que pareça amigo.", correct: true },
+          { text: "Passar a senha e mudar depois de 5 minutos.", correct: false }
+        ]
+      },
+      {
+        question: "Um amigo te manda uma mensagem no WhatsApp pedindo um código de 6 dígitos que acabou de chegar no seu SMS. O que fazer?",
+        options: [
+          { text: "Mandar o código rápido para ajudar o amigo.", correct: false },
+          { text: "Não enviar! Esse código pode ser para clonar ou roubar sua própria conta.", correct: true },
+          { text: "Postar o código nos seus stories.", correct: false }
+        ]
+      },
+      {
+        question: "Baixar jogos ou aplicativos modificados ('mods' ou 'hacks') de sites não oficiais pode trazer qual risco?",
+        options: [
+          { text: "Nenhum risco, é sempre seguro.", correct: false },
+          { text: "Infectar o dispositivo com vírus, malwares ou roubar suas contas.", correct: true },
+          { text: "Apenas fazer o celular esquentar um pouco.", correct: false }
+        ]
+      }
+    ];
+
+
+    let questions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+
+    const questionElement = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options-container");
+    const progressElement = document.getElementById("progress-text");
+    const nextButton = document.getElementById("btn-next");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const scoreText = document.getElementById("score-text");
+    const badgeText = document.getElementById("badge-text");
+
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+
+    function startQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      questions = shuffleArray(originalQuestions);
+
+
+      quizScreen.style.display = "block";
+      resultScreen.style.display = "none";
+      showQuestion();
+    }
+
+
+    function showQuestion() {
+      resetState();
+      let currentQuestion = questions[currentQuestionIndex];
+      questionElement.innerText = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+      progressElement.innerText = `Pergunta ${currentQuestionIndex + 1} de ${questions.length}`;
+
+
+      const shuffledOptions = shuffleArray(currentQuestion.options);
+
+
+      shuffledOptions.forEach(option => {
+        const button = document.createElement("button");
+        button.innerText = option.text;
+        button.classList.add("btn-option");
+        if (option.correct) {
+          button.dataset.correct = option.correct;
+        }
+        button.addEventListener("click", selectOption);
+        optionsContainer.appendChild(button);
+      });
+    }
+
+
+    function resetState() {
+      nextButton.style.display = "none";
+      while (optionsContainer.firstChild) {
+        optionsContainer.removeChild(optionsContainer.firstChild);
+      }
+    }
+
+
+    function selectOption(e) {
+      const selectedBtn = e.target;
+      const isCorrect = selectedBtn.dataset.correct === "true";
+
+
+      if (isCorrect) {
+        selectedBtn.classList.add("correct");
+        score++;
+        triggerSuccessEffects();
+      } else {
+        selectedBtn.classList.add("wrong");
+        triggerFailureEffects();
+      }
+
+
+      Array.from(optionsContainer.children).forEach(button => {
+        if (button.dataset.correct === "true") {
+          button.classList.add("correct");
+        }
+        button.disabled = true;
+      });
+
+
+      nextButton.style.display = "block";
+    }
+
+
+    function triggerSuccessEffects() {
+      const items = ["🎉", "✨", "😃", "🥳", "🌟", "😁", "🎊"];
+      for (let i = 0; i < 20; i++) {
+        createParticle(items[Math.floor(Math.random() * items.length)]);
+      }
+    }
+
+
+    function triggerFailureEffects() {
+      const banner = document.createElement("div");
+      banner.classList.add("wrong-banner");
+      banner.innerText = "AHHHHHH!";
+      document.body.appendChild(banner);
+      setTimeout(() => banner.remove(), 900);
+
+
+      const sadFaces = ["😢", "😭", "☹️", "💔", "🙁"];
+      for (let i = 0; i < 18; i++) {
+        createParticle(sadFaces[Math.floor(Math.random() * sadFaces.length)]);
+      }
+    }
+
+
+    function createParticle(symbol) {
+      const el = document.createElement("div");
+      el.classList.add("particle");
+      el.innerText = symbol;
+     
+      el.style.left = (Math.random() * 90 + 5) + "vw";
+      el.style.top = (Math.random() * 80 + 10) + "vh";
+      el.style.fontSize = (Math.random() * 1.5 + 1.2) + "rem";
+     
+      document.body.appendChild(el);
+
+
+      setTimeout(() => {
+        el.remove();
+      }, 800);
+    }
+
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+
+    function showResult() {
+      quizScreen.style.display = "none";
+      resultScreen.style.display = "block";
+      scoreText.innerText = `Você acertou ${score} de ${questions.length} perguntas.`;
+
+
+      if (score === 6) {
+        badgeText.innerText = "🏆 Nível: Guardião Implacável da Web";
+      } else if (score >= 4) {
+        badgeText.innerText = "⚡ Nível: Mestre da Segurança Digital";
+      } else if (score >= 2) {
+        badgeText.innerText = "🛡️ Nível: Antivírus em Treinamento";
+      } else {
+        badgeText.innerText = "⚠️ Nível: Alvo Fácil (Precisa Praticar)";
+      }
+    }
+
+
+    function restartQuiz() {
+      startQuiz();
+    }
+
+
+    startQuiz();
+  </script>
+</body>
+</html>
