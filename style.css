@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -12,19 +13,20 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    min-height: 100dvh;
+    padding: clamp(10px, 3vw, 20px);
     overflow-x: hidden;
     position: relative;
 }
 
-/* Container Principal do Quiz */
+/* Container Principal do Quiz (Adaptável em qualquer tela) */
 .quiz-container {
     background: #161b22;
     border: 1px solid #30363d;
-    border-radius: 16px;
+    border-radius: clamp(12px, 3vw, 20px);
     max-width: 650px;
     width: 100%;
-    padding: 30px;
+    padding: clamp(16px, 4vw, 30px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     position: relative;
     z-index: 10;
@@ -37,13 +39,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: clamp(12px, 3vw, 20px);
     border-bottom: 1px solid #30363d;
     padding-bottom: 12px;
 }
 
 .brand-tag {
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 2.5vw, 0.85rem);
     color: #8b949e;
     text-transform: uppercase;
     letter-spacing: 1.5px;
@@ -65,6 +67,7 @@ body {
     gap: 6px;
     transition: all 0.2s ease;
     user-select: none;
+    touch-action: manipulation;
 }
 
 .btn-sound:hover {
@@ -83,7 +86,7 @@ body {
 .screen {
     display: none;
     opacity: 0;
-    transition: opacity 0.4s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
 }
 
 .screen.active {
@@ -94,11 +97,11 @@ body {
 /* --- TELA INICIAL --- */
 .start-screen {
     text-align: center;
-    padding: 10px 5px;
+    padding: 10px 0;
 }
 
 .start-screen .hero-icon {
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
     margin-bottom: 10px;
     display: inline-block;
     filter: drop-shadow(0 0 10px rgba(88, 166, 255, 0.4));
@@ -106,34 +109,27 @@ body {
 }
 
 @keyframes pulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.08);
-    }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
 }
 
 .start-screen h1 {
     color: #58a6ff;
-    font-size: 2.2rem;
+    font-size: clamp(1.8rem, 5vw, 2.2rem);
     margin-bottom: 8px;
     letter-spacing: 1px;
 }
 
 .start-screen p {
     color: #8b949e;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     line-height: 1.5;
     margin-bottom: 25px;
 }
 
 /* Grid dos 3 Módulos */
 .modules-title {
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     color: #c9d1d9;
     font-weight: 600;
     margin-bottom: 15px;
@@ -149,7 +145,7 @@ body {
     background: #21262d;
     border: 2px solid #30363d;
     border-radius: 12px;
-    padding: 16px 10px;
+    padding: clamp(12px, 3vw, 16px) 8px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -157,12 +153,13 @@ body {
     justify-content: center;
     transition: all 0.25s ease;
     color: #c9d1d9;
+    touch-action: manipulation;
 }
 
 .module-card:hover {
     background: #30363d;
     border-color: #58a6ff;
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     box-shadow: 0 6px 15px rgba(88, 166, 255, 0.2);
 }
 
@@ -178,7 +175,7 @@ body {
 }
 
 .module-number {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 5vw, 2rem);
     font-weight: 800;
     color: #58a6ff;
     line-height: 1;
@@ -197,7 +194,7 @@ body {
 }
 
 .module-tag {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 700;
     background: #161b22;
     padding: 3px 8px;
@@ -211,9 +208,20 @@ body {
     border-color: #2ea043;
 }
 
-@media (max-width: 500px) {
+/* Responsividade Módulos para Celulares */
+@media (max-width: 520px) {
     .modules-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .module-card {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 12px 16px;
+    }
+
+    .module-number {
+        margin-bottom: 0;
     }
 }
 
@@ -236,25 +244,25 @@ body {
     padding: 8px 14px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 700;
     transition: all 0.2s ease;
+    touch-action: manipulation;
 }
 
 .btn-back-home:hover {
     background: #58a6ff;
     color: #0d1117;
-    transform: scale(1.05);
 }
 
 .quiz-title-tag {
     color: #8b949e;
-    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 2.5vw, 0.9rem);
     font-weight: 600;
 }
 
 .question {
-    font-size: 1.15rem;
+    font-size: clamp(1rem, 3.5vw, 1.15rem);
     font-weight: 600;
     color: #f0f6fc;
     margin-bottom: 20px;
@@ -264,33 +272,34 @@ body {
 .options {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
-/* Padronização idêntica para todas as opções de resposta */
+/* Opções de Resposta Adaptáveis */
 .btn-option {
     background-color: #21262d;
     color: #c9d1d9;
     border: 1px solid #30363d;
-    padding: 14px 18px;
+    padding: clamp(10px, 3vw, 14px) clamp(12px, 3.5vw, 18px);
     border-radius: 8px;
     text-align: left;
-    font-size: 1rem;
+    font-size: clamp(0.88rem, 2.8vw, 1rem);
     font-weight: 400;
     line-height: 1.4;
-    min-height: 54px;
+    min-height: 48px;
     cursor: pointer;
     transition: all 0.2s ease;
     width: 100%;
     display: flex;
     align-items: center;
+    touch-action: manipulation;
 }
 
 .btn-option:hover:not([disabled]) {
     background-color: #30363d;
     border-color: #58a6ff;
     color: #ffffff;
-    transform: translateX(4px);
+    transform: translateX(3px);
 }
 
 .btn-option.correct {
@@ -312,6 +321,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .progress {
@@ -330,6 +341,7 @@ body {
     cursor: pointer;
     display: none;
     transition: background 0.2s;
+    touch-action: manipulation;
 }
 
 .btn-next:hover {
@@ -342,7 +354,7 @@ body {
 }
 
 .result-screen h2 {
-    font-size: 1.8rem;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
     color: #58a6ff;
     margin-bottom: 15px;
 }
@@ -350,13 +362,13 @@ body {
 .score-summary {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 20px;
     flex-wrap: wrap;
 }
 
 .score-correct {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 3vw, 1.2rem);
     font-weight: 700;
     color: #3fb950;
     background: rgba(46, 160, 67, 0.15);
@@ -366,7 +378,7 @@ body {
 }
 
 .score-wrong {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 3vw, 1.2rem);
     font-weight: 700;
     color: #f85149;
     background: rgba(218, 54, 51, 0.15);
@@ -383,8 +395,8 @@ body {
     border-radius: 20px;
     color: #58a6ff;
     font-weight: bold;
-    margin-bottom: 25px;
-    font-size: 1.05rem;
+    margin-bottom: 20px;
+    font-size: clamp(0.9rem, 2.8vw, 1.05rem);
 }
 
 .btn-restart {
@@ -397,6 +409,7 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
+    touch-action: manipulation;
 }
 
 .btn-restart:hover {
@@ -416,12 +429,10 @@ body {
         opacity: 0;
         transform: scale(0.3) rotate(0deg);
     }
-
     30% {
         opacity: 1;
         transform: scale(1.1) rotate(20deg);
     }
-
     100% {
         opacity: 0;
         transform: translateY(-40px) scale(0.6) rotate(90deg);
@@ -433,7 +444,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
     font-weight: 900;
     color: #f85149;
     text-shadow: 0 0 20px rgba(248, 81, 73, 0.8);
@@ -447,17 +458,14 @@ body {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.3);
     }
-
     25% {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1.1);
     }
-
     75% {
         opacity: 1;
         transform: translate(-50%, -50%) scale(1);
     }
-
     100% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.8);
