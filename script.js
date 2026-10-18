@@ -1,350 +1,473 @@
-// Banco de Dados de Perguntas com tamanhos de texto equilibrados
-const allQuestions = [
-    {
-        question: "O que você deve fazer ao receber um link suspeito no chat do jogo de um colega desconhecido?",
-        options: [
-            "Clicar para ver do que se trata.",
-            "Ignorar e bloquear o usuário.",
-            "Enviar meus dados de login.",
-            "Compartilhar com outros amigos."
-        ],
-        correct: 1
-    },
-    {
-        question: "Qual é a prática mais segura para proteger suas contas de redes sociais e jogos?",
-        options: [
-            "Usar a mesma senha fácil.",
-            "Ativar a verificação em duas etapas.",
-            "Anotar a senha em um papel na mesa.",
-            "Mudar a senha uma vez por ano."
-        ],
-        correct: 1
-    },
-    {
-        question: "O que caracteriza uma mensagem de phishing direcionada a roubar suas informações?",
-        options: [
-            "Promessas falsas de prêmios e urgência.",
-            "Avisos oficiais atualizados da escola.",
-            "Mensagens simples de bom dia de parentes.",
-            "Notificações comuns de atualizações de apps."
-        ],
-        correct: 0
-    },
-    {
-        question: "Por que redes Wi-Fi públicas e abertas exigem cuidado ao acessar dados sensíveis?",
-        options: [
-            "Elas costumam gastar mais a bateria.",
-            "Elas deixam o celular mais lento.",
-            "Elas podem interceptar seus dados facilmente.",
-            "Elas bloqueiam o acesso a jogos online."
-        ],
-        correct: 2
-    },
-    {
-        question: "Qual atitude demonstra um comportamento consciente em relação à sua privacidade online?",
-        options: [
-            "Aceitar qualquer termo sem ler.",
-            "Configurar perfis como privados.",
-            "Publicar a localização exata em tempo real.",
-            "Informar o número de telefone em fóruns."
-        ],
-        correct: 1
-    },
-    {
-        question: "Se alguém descobrir sua senha, qual deve ser sua primeira reação imediata?",
-        options: [
-            "Criar uma conta nova do zero.",
-            "Avisar os amigos na timeline.",
-            "Alterar a senha e verificar dispositivos conectados.",
-            "Esperar o suporte técnico responder em dias."
-        ],
-        correct: 2
-    },
-    {
-        question: "O que significa o termo 'Engenharia Social' no contexto de segurança digital?",
-        options: [
-            "Técnicas de programação avançadas.",
-            "Manipular pessoas para obter dados confidenciais.",
-            "Redes sociais focadas em estudos escolares.",
-            "Manutenção de servidores de internet."
-        ],
-        correct: 1
-    },
-    {
-        question: "Qual é a melhor escolha ao criar uma senha nova para proteger seu perfil?",
-        options: [
-            "Sua data de nascimento com seu apelido.",
-            "Uma sequência lógica como 12345678.",
-            "Uma frase longa com letras, números e símbolos.",
-            "O nome do seu primeiro animal de estimação."
-        ],
-        correct: 2
-    },
-    {
-        question: "Como você deve proceder ao baixar modificações (mods) ou jogos da internet?",
-        options: [
-            "Baixar apenas de fontes oficiais e confiáveis.",
-            "Clicar no primeiro link que aparecer no Google.",
-            "Aceitar qualquer arquivo executável enviado.",
-            "Desativar o antivírus para baixar mais rápido."
-        ],
-        correct: 0
-    },
-    {
-        question: "Qual é o principal risco de reutilizar a mesma senha em vários sites diferentes?",
-        options: [
-            "Aparecerem propagandas indesejadas no navegador.",
-            "Se um site vazar dados, todas as suas contas correm risco.",
-            "O teclado virtual parar de funcionar corretamente.",
-            "Sua internet ficar instável nos jogos."
-        ],
-        correct: 1
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: clamp(10px, 3vw, 20px);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Container Principal do Quiz (Adaptável em qualquer tela) */
+.quiz-container {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: clamp(12px, 3vw, 20px);
+    max-width: 650px;
+    width: 100%;
+    padding: clamp(16px, 4vw, 30px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Top Bar com o Controle de Som */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(12px, 3vw, 20px);
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 12px;
+}
+
+.brand-tag {
+    font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+/* Botão Mute / Volume */
+.btn-sound {
+    background: #21262d;
+    border: 1px solid #30363d;
+    color: #58a6ff;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.btn-sound:hover {
+    background: #30363d;
+    border-color: #58a6ff;
+    transform: scale(1.05);
+}
+
+.btn-sound.muted {
+    color: #8b949e;
+    border-color: #30363d;
+    background: #161b22;
+}
+
+/* Configuração das Telas */
+.screen {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.screen.active {
+    display: block;
+    opacity: 1;
+}
+
+/* --- TELA INICIAL --- */
+.start-screen {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.start-screen .hero-icon {
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    margin-bottom: 10px;
+    display: inline-block;
+    filter: drop-shadow(0 0 10px rgba(88, 166, 255, 0.4));
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+.start-screen h1 {
+    color: #58a6ff;
+    font-size: clamp(1.8rem, 5vw, 2.2rem);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.start-screen p {
+    color: #8b949e;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+/* Grid dos 3 Módulos */
+.modules-title {
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    color: #c9d1d9;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.module-card {
+    background: #21262d;
+    border: 2px solid #30363d;
+    border-radius: 12px;
+    padding: clamp(12px, 3vw, 16px) 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    color: #c9d1d9;
+    touch-action: manipulation;
+}
+
+.module-card:hover {
+    background: #30363d;
+    border-color: #58a6ff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(88, 166, 255, 0.2);
+}
+
+.module-card.featured {
+    border-color: #238636;
+    background: #1c2721;
+}
+
+.module-card.featured:hover {
+    border-color: #2ea043;
+    background: #233529;
+    box-shadow: 0 6px 15px rgba(46, 160, 67, 0.3);
+}
+
+.module-number {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    font-weight: 800;
+    color: #58a6ff;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.module-card.featured .module-number {
+    color: #3fb950;
+}
+
+.module-label {
+    font-size: 0.85rem;
+    color: #8b949e;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.module-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: #161b22;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: #58a6ff;
+    border: 1px solid #30363d;
+}
+
+.module-card.featured .module-tag {
+    color: #3fb950;
+    border-color: #2ea043;
+}
+
+/* Responsividade Módulos para Celulares */
+@media (max-width: 520px) {
+    .modules-grid {
+        grid-template-columns: 1fr;
     }
-];
-
-// Variáveis de Estado do Quiz
-let currentQuestions = [];
-let currentIndex = 0;
-let scoreCorrect = 0;
-let scoreWrong = 0;
-let selectedModuleSize = 6;
-let isSoundOn = true;
-
-// Elementos do DOM
-const startScreen = document.getElementById("start-screen");
-const quizScreen = document.getElementById("quiz-screen");
-const resultScreen = document.getElementById("result-screen");
-const questionText = document.getElementById("question-text");
-const optionsContainer = document.getElementById("options-container");
-const progressText = document.getElementById("progress-text");
-const btnNext = document.getElementById("btn-next");
-const correctText = document.getElementById("correct-text");
-const wrongText = document.getElementById("wrong-text");
-const badgeText = document.getElementById("badge-text");
-
-// Funções de Áudio (Sons Sintetizados via Web Audio API)
-let audioCtx = null;
-
-function initAudio() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-}
-
-function playSound(type) {
-    if (!isSoundOn) return;
-    initAudio();
-    if (!audioCtx) return;
-
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-    osc.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    const now = audioCtx.currentTime;
-
-    if (type === 'correct') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(440, now);
-        osc.frequency.setValueAtTime(660, now + 0.1);
-        gainNode.gain.setValueAtTime(0.15, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc.start(now);
-        osc.stop(now + 0.3);
-    } else if (type === 'wrong') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(180, now);
-        osc.frequency.setValueAtTime(120, now + 0.15);
-        gainNode.gain.setValueAtTime(0.15, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-        osc.start(now);
-        osc.stop(now + 0.4);
-    } else if (type === 'click') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(300, now);
-        gainNode.gain.setValueAtTime(0.05, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-        osc.start(now);
-        osc.stop(now + 0.08);
-    }
-}
-
-function toggleSound() {
-    isSoundOn = !isSoundOn;
-    const soundIcon = document.getElementById("sound-icon");
-    const soundLabel = document.getElementById("sound-label");
-    const btnSound = document.getElementById("btn-sound");
-
-    if (isSoundOn) {
-        soundIcon.textContent = "🔊";
-        soundLabel.textContent = "Som: ON";
-        btnSound.classList.remove("muted");
-        playSound('click');
-    } else {
-        soundIcon.textContent = "🔇";
-        soundLabel.textContent = "Som: OFF";
-        btnSound.classList.add("muted");
-    }
-}
-
-// Controle de Telas
-function switchScreen(targetScreen) {
-    [startScreen, quizScreen, resultScreen].forEach(screen => {
-        screen.classList.remove("active");
-    });
-    targetScreen.classList.add("active");
-}
-
-function goToHome() {
-    playSound('click');
-    switchScreen(startScreen);
-}
-
-// Iniciar o Quiz com base no módulo escolhido
-function selectModule(size) {
-    playSound('click');
-    selectedModuleSize = size;
-
-    // Embaralhar as perguntas principais
-    let shuffledPool = [...allQuestions].sort(() => Math.random() - 0.5);
-    currentQuestions = shuffledPool.slice(0, size);
-
-    currentIndex = 0;
-    scoreCorrect = 0;
-    scoreWrong = 0;
-
-    switchScreen(quizScreen);
-    loadQuestion();
-}
-
-// Carregar Pergunta Atual
-function loadQuestion() {
-    btnNext.style.display = "none";
-    const currentQ = currentQuestions[currentIndex];
-
-    questionText.textContent = currentQ.question;
-    progressText.textContent = `Pergunta ${currentIndex + 1} de ${currentQuestions.length}`;
-    optionsContainer.innerHTML = "";
-
-    // Criar array de objetos de opções para mapear a resposta correta após o embaralhamento
-    let optionsWithIndex = currentQ.options.map((opt, idx) => {
-        return { text: opt, isCorrect: idx === currentQ.correct };
-    });
-
-    // Embaralhamento Fisher-Yates (Embaralha de verdade as alternativas)
-    for (let i = optionsWithIndex.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [optionsWithIndex[i], optionsWithIndex[j]] = [optionsWithIndex[j], optionsWithIndex[i]];
+    
+    .module-card {
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 12px 16px;
     }
 
-    // Renderizar os botões das alternativas
-    optionsWithIndex.forEach((item) => {
-        const btn = document.createElement("button");
-        btn.classList.add("btn-option");
-        btn.textContent = item.text;
-        btn.onclick = () => selectOption(btn, item.isCorrect);
-        optionsContainer.appendChild(btn);
-    });
-}
-
-// Selecionar Opção
-function selectOption(selectedBtn, isCorrect) {
-    const allButtons = optionsContainer.querySelectorAll(".btn-option");
-
-    // Desativar todos os botões após a escolha
-    allButtons.forEach(btn => btn.disabled = true);
-
-    if (isCorrect) {
-        selectedBtn.classList.add("correct");
-        scoreCorrect++;
-        playSound('correct');
-        createParticles(selectedBtn);
-    } else {
-        selectedBtn.classList.add("wrong");
-        scoreWrong++;
-        playSound('wrong');
-        showWrongBanner();
-
-        // Destacar qual era a verdadeira resposta correta
-        allButtons.forEach(btn => {
-            // Como mapeamos, podemos verificar o texto ou recriar a lógica simples
-            // Vamos achar o botão correspondente à resposta correta original
-            const currentQ = currentQuestions[currentIndex];
-            if (btn.textContent === currentQ.options[currentQ.correct]) {
-                btn.classList.add("correct");
-            }
-        });
-    }
-
-    btnNext.style.display = "block";
-}
-
-// Próxima Pergunta
-function nextQuestion() {
-    playSound('click');
-    currentIndex++;
-    if (currentIndex < currentQuestions.length) {
-        loadQuestion();
-    } else {
-        showResults();
+    .module-number {
+        margin-bottom: 0;
     }
 }
 
-// Mostrar Resultados
-function showResults() {
-    switchScreen(resultScreen);
-    correctText.textContent = `✅ Acertos: ${scoreCorrect}`;
-    wrongText.textContent = `❌ Erros: ${scoreWrong}`;
+/* --- TELA DO QUIZ --- */
+.quiz-nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    background: #21262d;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid #30363d;
+}
 
-    const percentage = (scoreCorrect / currentQuestions.length) * 100;
-    let badge = "";
+.btn-back-home {
+    background: #161b22;
+    border: 1px solid #58a6ff;
+    color: #58a6ff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+}
 
-    if (percentage === 100) {
-        badge = "🏆 Guardião Supremo da Cibersegurança!";
-    } else if (percentage >= 70) {
-        badge = "🛡️ Especialista em Proteção Digital";
-    } else if (percentage >= 40) {
-        badge = "⚠️ Aprendiz Atento (Continue Praticando)";
-    } else {
-        badge = "🚨 Alerta de Risco (Revise os Conceitos)";
+.btn-back-home:hover {
+    background: #58a6ff;
+    color: #0d1117;
+}
+
+.quiz-title-tag {
+    color: #8b949e;
+    font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+    font-weight: 600;
+}
+
+.question {
+    font-size: clamp(1rem, 3.5vw, 1.15rem);
+    font-weight: 600;
+    color: #f0f6fc;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Opções de Resposta Adaptáveis */
+.btn-option {
+    background-color: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    padding: clamp(10px, 3vw, 14px) clamp(12px, 3.5vw, 18px);
+    border-radius: 8px;
+    text-align: left;
+    font-size: clamp(0.88rem, 2.8vw, 1rem);
+    font-weight: 400;
+    line-height: 1.4;
+    min-height: 48px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    touch-action: manipulation;
+}
+
+.btn-option:hover:not([disabled]) {
+    background-color: #30363d;
+    border-color: #58a6ff;
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.btn-option.correct {
+    background-color: #2ea043 !important;
+    border-color: #3fb950 !important;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.btn-option.wrong {
+    background-color: #da3633 !important;
+    border-color: #f85149 !important;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.footer {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.progress {
+    color: #8b949e;
+    font-size: 0.9rem;
+}
+
+.btn-next {
+    background-color: #238636;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: none;
+    transition: background 0.2s;
+    touch-action: manipulation;
+}
+
+.btn-next:hover {
+    background-color: #2ea043;
+}
+
+/* --- TELA DE RESULTADO --- */
+.result-screen {
+    text-align: center;
+}
+
+.result-screen h2 {
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    color: #58a6ff;
+    margin-bottom: 15px;
+}
+
+.score-summary {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.score-correct {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-weight: 700;
+    color: #3fb950;
+    background: rgba(46, 160, 67, 0.15);
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid #2ea043;
+}
+
+.score-wrong {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    font-weight: 700;
+    color: #f85149;
+    background: rgba(218, 54, 51, 0.15);
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid #da3633;
+}
+
+.badge {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #21262d;
+    border: 1px solid #58a6ff;
+    border-radius: 20px;
+    color: #58a6ff;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: clamp(0.9rem, 2.8vw, 1.05rem);
+}
+
+.btn-restart {
+    background-color: #1f6feb;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    touch-action: manipulation;
+}
+
+.btn-restart:hover {
+    background-color: #388bfd;
+}
+
+/* Efeitos Visuais - Partículas e Banners */
+.particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    animation: floatEffect 0.8s ease-out forwards;
+}
+
+@keyframes floatEffect {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(0deg);
     }
-
-    badgeText.textContent = `Nível: ${badge}`;
-}
-
-function restartQuiz() {
-    playSound('click');
-    switchScreen(startScreen);
-}
-
-// Efeitos Visuais Extras
-function createParticles(targetElement) {
-    const rect = targetElement.getBoundingClientRect();
-    const x = rect.left + rect.width / 2;
-    const y = rect.top + rect.height / 2;
-
-    const emojis = ['✨', '🛡️', '⭐', '💻', '🔒'];
-    for (let i = 0; i < 6; i++) {
-        const p = document.createElement("div");
-        p.classList.add("particle");
-        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        p.style.left = `${x}px`;
-        p.style.top = `${y}px`;
-
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 40 + Math.random() * 60;
-        p.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
-        p.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
-
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 800);
+    30% {
+        opacity: 1;
+        transform: scale(1.1) rotate(20deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.6) rotate(90deg);
     }
 }
 
-function showWrongBanner() {
-    const banner = document.createElement("div");
-    banner.classList.add("wrong-banner");
-    banner.textContent = "❌ OPS!";
-    document.body.appendChild(banner);
-    setTimeout(() => banner.remove(), 900);
+.wrong-banner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    font-weight: 900;
+    color: #f85149;
+    text-shadow: 0 0 20px rgba(248, 81, 73, 0.8);
+    z-index: 1000;
+    pointer-events: none;
+    animation: bannerPop 0.9s ease-out forwards;
+}
+
+@keyframes bannerPop {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.3);
+    }
+    25% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    75% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
 }
